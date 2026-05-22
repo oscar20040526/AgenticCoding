@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oscar20040526 | Design Showroom</title>
+    <meta name="description" content="探索 oscar20040526 基於 UI/UX Pro Max 規範全新打造的極致流體極光展示空間，呈現頂級前沿 AI 與 Agent 開源成果。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* UI/UX Pro Max - Design System Tokens */
+        :root {
+            --bg-base: #060813;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-bg-hover: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --glass-border-hover: rgba(255, 255, 255, 0.2);
+            
+            /* 虹彩流體漸層 (Iridescent Spectrum) */
+            --rainbow-1: #00f2fe;
+            --rainbow-2: #4facfe;
+            --rainbow-3: #b19ffb;
+            --rainbow-4: #fc76b4;
+            --rainbow-grad: linear-gradient(135deg, var(--rainbow-1) 0%, var(--rainbow-2) 30%, var(--rainbow-3) 70%, var(--rainbow-4) 100%);
+            
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+            --text-dim: #6b7280;
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+            
+            --blur-amount: 24px;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 全域重設與極佳渲染 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.625;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 捲軸設計 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border: 2px solid var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--rainbow-2);
+        }
+
+        /* Aurora UI - 流動極光背景 */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #0a0d1e 0%, #04050a 100%);
+            pointer-events: none;
+        }
+
+        .aurora-blob {
+            position: absolute;
+            width: 70vw;
+            height: 70vw;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        .aurora-1 {
+            background: radial-gradient(circle, var(--rainbow-1) 0%, transparent 70%);
+            top: -20%;
+            left: -20%;
+            animation: flow-1 25s infinite alternate ease-in-out;
+        }
+
+        .aurora-2 {
+            background: radial-gradient(circle, var(--rainbow-4) 0%, transparent 70%);
+            bottom: -20%;
+            right: -20%;
+            animation: flow-2 30s infinite alternate ease-in-out;
+        }
+
+        .aurora-3 {
+            background: radial-gradient(circle, var(--rainbow-3) 0%, transparent 70%);
+            top: 35%;
+            left: 45%;
+            animation: flow-3 28s infinite alternate ease-in-out;
+        }
+
+        @keyframes flow-1 {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { transform: translate(10vw, 15vh) scale(1.2) rotate(180deg); }
+        }
+
+        @keyframes flow-2 {
+            0% { transform: translate(0, 0) scale(1.1) rotate(0deg); }
+            100% { transform: translate(-15vw, -10vh) scale(0.9) rotate(-180deg); }
+        }
+
+        @keyframes flow-3 {
+            0% { transform: translate(0, 0) scale(0.9) rotate(0deg); }
+            100% { transform: translate(12vw, -12vh) scale(1.15) rotate(90deg); }
+        }
+
+        /* 網格背景紋理 */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -9;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+        }
+
+        /* Nav 導覽列 */
+        header {
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 8, 19, 0.7);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 5rem;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.6rem;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: url(#rainbow-logo);
+            filter: drop-shadow(0 2px 10px rgba(0, 242, 254, 0.3));
+        }
+
+        .logo span {
+            background: var(--rainbow-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .profile-btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .profile-btn:hover {
+            border-color: var(--rainbow-3);
+            box-shadow: 0 0 20px rgba(177, 159, 251, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 7rem 0 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: -8px; left: -8px; right: -8px; bottom: -8px;
+            border-radius: 50%;
+            background: var(--rainbow-grad);
+            animation: rotate-ring 12s linear infinite;
+            padding: 3px;
+        }
+
+        .avatar-ring-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-base);
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            padding: 6px;
+            position: relative;
+            z-index: 2;
+            background: var(--bg-base);
+        }
+
+        @keyframes rotate-ring {
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.04em;
+        }
+
+        .hero-title span.grad {
+            background: var(--rainbow-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .hero-title span.grad::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 8px;
+            width: 100%; height: 6px;
+            background: var(--rainbow-grad);
+            opacity: 0.15;
+            border-radius: 4px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-sub);
+            max-width: 680px;
+            margin: 0 auto 3rem auto;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+        }
+
+        /* 統計徽章 */
+        .badges-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .badge-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.75rem 1.75rem;
+            border-radius: 100px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+
+        .badge-item:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--rainbow-2);
+            box-shadow: 0 0 10px var(--rainbow-2);
+        }
+
+        .badge-dot.purple {
+            background: var(--rainbow-3);
+            box-shadow: 0 0 10px var(--rainbow-3);
+        }
+
+        .badge-dot.pink {
+            background: var(--rainbow-4);
+            box-shadow: 0 0 10px var(--rainbow-4);
+        }
+
+        .badge-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .badge-label {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* 展示區標題 */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title svg {
+            width: 32px;
+            height: 32px;
+            color: var(--rainbow-1);
+        }
+
+        .section-counter {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 100px;
+            background: rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            color: var(--rainbow-1);
+        }
+
+        /* Repos Showcase Grid */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 8rem;
+        }
+
+        /* UI/UX Pro Max - Liquid Glass Card */
+        .liquid-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 2.25rem;
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+            transition: var(--transition-smooth);
+            min-height: 300px;
+        }
+
+        /* 虹彩流體發光邊框效果 */
+        .liquid-card::after {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            border-radius: 28px;
+            background: var(--rainbow-grad);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            padding: 1px;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .liquid-card:hover {
+            transform: translateY(-10px);
+            background: var(--glass-bg-hover);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 35px rgba(0, 242, 254, 0.08);
+            border-color: transparent;
+        }
+
+        .liquid-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-top {
+            margin-bottom: 2rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.9rem;
+            border-radius: 100px;
+        }
+
+        /* 動態指定科技徽章顏色 */
+        .tech-badge.cyan {
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--rainbow-1);
+        }
+
+        .tech-badge.purple {
+            background: rgba(177, 159, 251, 0.08);
+            border: 1px solid rgba(177, 159, 251, 0.2);
+            color: var(--rainbow-3);
+        }
+
+        .tech-badge.pink {
+            background: rgba(252, 118, 180, 0.08);
+            border: 1px solid rgba(252, 118, 180, 0.2);
+            color: var(--rainbow-4);
+        }
+
+        .git-svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--text-dim);
+            transition: var(--transition-smooth);
+        }
+
+        .liquid-card:hover .git-svg {
+            fill: var(--text-main);
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-main);
+            margin-bottom: 0.85rem;
+            display: inline-block;
+            transition: var(--transition-smooth);
+            letter-spacing: -0.01em;
+        }
+
+        .card-title:hover {
+            color: var(--rainbow-1);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .card-description {
+            font-size: 0.94rem;
+            color: var(--text-sub);
+            font-weight: 300;
+            line-height: 1.65;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 1.5rem;
+        }
+
+        .language-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .lang-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .lang-dot.js { background: #f1e05a; box-shadow: 0 0 8px #f1e05a; }
+        .lang-dot.notebook { background: #da5b0b; box-shadow: 0 0 8px #da5b0b; }
+        .lang-dot.html { background: #e34c26; box-shadow: 0 0 8px #e34c26; }
+        .lang-dot.ai { background: var(--rainbow-grad); box-shadow: 0 0 8px var(--rainbow-3); }
+
+        .explore-link {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--rainbow-2);
+            text-decoration: none;
+            font-family: var(--font-display);
+            transition: var(--transition-smooth);
+        }
+
+        .explore-link svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .explore-link:hover {
+            color: var(--text-main);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+
+        .explore-link:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Footer 頁尾 */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0;
+            background: rgba(4, 5, 10, 0.85);
+            backdrop-filter: blur(20px);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        footer p span {
+            background: var(--rainbow-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-socials a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+
+        .footer-socials a:hover {
+            color: var(--rainbow-1);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.75rem;
+            }
+            .hero-subtitle {
+                font-size: 1.15rem;
+                padding: 0 0.5rem;
+            }
+            .showcase-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .container {
+                padding: 0 1.5rem;
+            }
+            .badges-wrapper {
+                gap: 0.75rem;
+            }
+            .badge-item {
+                padding: 0.6rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SVG 虹彩漸層定義 -->
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <linearGradient id="rainbow-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00f2fe" />
+            <stop offset="30%" stop-color="#4facfe" />
+            <stop offset="70%" stop-color="#b19ffb" />
+            <stop offset="100%" stop-color="#fc76b4" />
+        </linearGradient>
+    </svg>
+
+    <!-- Aurora UI 背景層 -->
+    <div class="aurora-container">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+        <div class="aurora-blob aurora-3"></div>
+    </div>
+    
+    <!-- 網格點綴層 -->
+    <div class="grid-overlay"></div>
+
+    <!-- 導覽列 -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="https://github.com/oscar20040526" target="_blank" class="logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span>oscar20040526</span>
+            </a>
+            <a href="https://github.com/oscar20040526" target="_blank" class="profile-btn">GitHub Profile</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="avatar-container">
+                <div class="avatar-ring">
+                    <div class="avatar-ring-inner"></div>
+                </div>
+                <img src="https://avatars.githubusercontent.com/u/229546514?v=4" alt="oscar20040526" class="avatar-img">
+            </div>
+            
+            <h1 class="hero-title">
+                極光流體 <br><span class="grad">智慧開發空間</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                歡迎光臨我的全新 UI/UX 設計展廳。基於 UI/UX Pro Max 規範精心設計，展示出結合極光流體與高階玻璃擬態的頂尖開源體驗。
+            </p>
+            
+            <!-- 統計徽章 -->
+            <div class="badges-wrapper">
+                <div class="badge-item">
+                    <span class="badge-dot"></span>
+                    <span class="badge-text">5 Active</span>
+                    <span class="badge-label">專案</span>
+                </div>
+                <div class="badge-item">
+                    <span class="badge-dot purple"></span>
+                    <span class="badge-text">Pro Max</span>
+                    <span class="badge-label">設計規格</span>
+                </div>
+                <div class="badge-item">
+                    <span class="badge-dot pink"></span>
+                    <span class="badge-text">Agentic</span>
+                    <span class="badge-label">驅動</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 展示區標頭 -->
+        <div class="section-header">
+            <h2 class="section-title">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                極緻專案展廳 (Project Showroom)
+            </h2>
+            <span class="section-counter">精選儲存庫 (5)</span>
+        </div>
+
+        <!-- 儲存庫卡片網格 -->
+        <div class="showcase-grid">
+
+            <!-- 1. Agentic-Coding -->
+            <div class="liquid-card">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="tech-badge cyan">Agentic AI</span>
+                        <svg class="git-svg" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <a href="https://github.com/oscar20040526/Agentic-Coding" target="_blank" class="card-title">Agentic-Coding</a>
+                    <p class="card-description">
+                        探索基於 AI Agent（代理人）的新型協同開發模式。採用先進的 JavaScript 架構，專注於實現程式碼開發的自主規劃、編程與調試。
+                    </p>
+                </div>
+                <div class="card-bottom">
+                    <div class="language-wrapper">
+                        <span class="lang-dot js"></span>
+                        <span>JavaScript</span>
+                    </div>
+                    <a href="https://github.com/oscar20040526/Agentic-Coding" target="_blank" class="explore-link">
+                        Explore
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. AgenticCoding -->
+            <div class="liquid-card">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="tech-badge purple">Core Project</span>
+                        <svg class="git-svg" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <a href="https://github.com/oscar20040526/AgenticCoding" target="_blank" class="card-title">AgenticCoding</a>
+                    <p class="card-description">
+                        展示 AI 代理人自動化建置與自主部署的完整工作流。本頁面即是由 AI 讀取 UI/UX Pro Max 規範後自主提交與託管的精華實踐。
+                    </p>
+                </div>
+                <div class="card-bottom">
+                    <div class="language-wrapper">
+                        <span class="lang-dot html"></span>
+                        <span>HTML / CSS</span>
+                    </div>
+                    <a href="https://github.com/oscar20040526/AgenticCoding" target="_blank" class="explore-link">
+                        Explore
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. AI -->
+            <div class="liquid-card">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="tech-badge pink">Research</span>
+                        <svg class="git-svg" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <a href="https://github.com/oscar20040526/AI" target="_blank" class="card-title">AI (Forked)</a>
+                    <p class="card-description">
+                        深度追蹤人工智慧與核心技術的 Fork 專案。整合了前沿大語言模型（LLM）架構、多模態感知與演算法優化的開源智慧結晶。
+                    </p>
+                </div>
+                <div class="card-bottom">
+                    <div class="language-wrapper">
+                        <span class="lang-dot ai"></span>
+                        <span>AI / Core</span>
+                    </div>
+                    <a href="https://github.com/oscar20040526/AI" target="_blank" class="explore-link">
+                        Explore
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. ai- -->
+            <div class="liquid-card">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="tech-badge pink">Interactive</span>
+                        <svg class="git-svg" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <a href="https://github.com/oscar20040526/ai-" target="_blank" class="card-title">ai-</a>
+                    <p class="card-description">
+                        專門使用 Jupyter Notebook 進行機器學習研究的互動式程式庫。涵蓋數據預處理、特徵工程、演算法調參，以及機器學習模型成效評估的完整分析。
+                    </p>
+                </div>
+                <div class="card-bottom">
+                    <div class="language-wrapper">
+                        <span class="lang-dot notebook"></span>
+                        <span>Jupyter Notebook</span>
+                    </div>
+                    <a href="https://github.com/oscar20040526/ai-" target="_blank" class="explore-link">
+                        Explore
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. aiai -->
+            <div class="liquid-card">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="tech-badge pink">Interactive</span>
+                        <svg class="git-svg" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <a href="https://github.com/oscar20040526/aiai" target="_blank" class="card-title">aiai</a>
+                    <p class="card-description">
+                        基於 Jupyter Notebook 的深度學習與神經網路互動式研究。著重於電腦視覺、卷積神經網路（CNN）與自然語言模型實作。
+                    </p>
+                </div>
+                <div class="card-bottom">
+                    <div class="language-wrapper">
+                        <span class="lang-dot notebook"></span>
+                        <span>Jupyter Notebook</span>
+                    </div>
+                    <a href="https://github.com/oscar20040526/aiai" target="_blank" class="explore-link">
+                        Explore
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 oscar20040526. All rights reserved.</p>
+            <p>Powered by <span>UI/UX Pro Max Design System</span> &bull; Built by Antigravity</p>
+            <div class="footer-socials">
+                <a href="https://github.com/oscar20040526" target="_blank">GitHub Profile</a>
+                <span>&bull;</span>
+                <a href="https://github.com/oscar20040526/AgenticCoding" target="_blank">Source Code</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS: 虹彩邊框的動態滑鼠追蹤 (可選) -->
+    <script>
+        // 為卡片加入動態懸浮效果與背景色彩互動
+        const cards = document.querySelectorAll('.liquid-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>
