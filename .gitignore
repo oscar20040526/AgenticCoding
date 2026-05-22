@@ -1,0 +1,7 @@
+# Supabase 密鑰與敏感環境變數
+.env
+
+# 操作系統與臨時檔案
+Thumbs.db
+.DS_Store
+*.log
